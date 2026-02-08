@@ -270,13 +270,21 @@
             display: none;
         }
 
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #ff4757;
-            position: absolute;
-            animation: confetti-fall 3s linear infinite;
+        .pleading-text {
+            font-size: 1.5em;
+            color: #ff69b4;
+            font-weight: bold;
+            margin: 20px 0;
+            min-height: 40px;
+            animation: shake 0.5s ease-in-out;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Bradley Hand', cursive;
+            text-shadow: 1px 1px 2px rgba(255, 105, 180, 0.3);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
         .whatsapp-btn {
@@ -299,6 +307,15 @@
             box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
         }
 
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff4757;
+            position: absolute;
+            animation: confetti-fall 3s linear infinite;
+        }
+
         @keyframes confetti-fall {
             to {
                 transform: translateY(100vh) rotate(360deg);
@@ -312,6 +329,7 @@
         <div class="question-section" id="questionSection">
             <div class="heart">💝</div>
             <h1>Will You Be My Valentine?</h1>
+            <p class="pleading-text" id="pleadingText"></p>
             <div class="button-container" id="buttonContainer">
                 <button id="yesBtn">Yes! 💕</button>
                 <button id="noBtn">No</button>
@@ -328,10 +346,10 @@
                 <p>You make my heart skip a beat,</p>
                 <p> My face light up with joy everytime I see you</p>
                 <p class="signature">💝</p>
+                <a href="https://wa.me/9158324044?text=Yess!♥" class="whatsapp-btn" target="_blank">
+                    Take me to Abhi💖
+                </a>
             </div>
-            <a href="https://wa.me/9158324044?text=Yess!♥" class="whatsapp-btn" target="_blank">
-                Take me to Abhi💖
-            </a>
         </div>
     </div>
 
@@ -341,6 +359,41 @@
         const questionSection = document.getElementById('questionSection');
         const celebration = document.getElementById('celebration');
         const buttonContainer = document.getElementById('buttonContainer');
+        const pleadingText = document.getElementById('pleadingText');
+
+        const pleadingMessages = [
+            "Please? 🥺",
+            "Pretty please? 💕",
+            "Pretty please with a cherry on top? 🍒",
+            "Please please please? 🙏",
+            "Come on... please? 💖",
+            "I'm begging you! 😭",
+            "Just say yes! 💝",
+            "You know you want to! 😊",
+            "Please please please please? 🥹",
+            "Don't break my heart! 💔",
+            "Give me a chance? 🌟",
+            "I promise it'll be worth it! ✨",
+            "You're making this so hard! 😢",
+            "Why are you doing this to me? 😭",
+            "One little yes? That's all! 🥺",
+            "My heart can't take this! 💗",
+            "You're so cruel! 😿",
+            "Just click yes already! 💘",
+            "I'll do anything! 🙇",
+            "Think about all the fun we'll have! 🎉"
+        ];
+
+        let pleadingCount = 0;
+        let shuffledMessages = [...pleadingMessages];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         // Handle Yes button click
         yesBtn.addEventListener('click', () => {
@@ -352,14 +405,32 @@
 
         // Handle No button hover - make it run away
         noBtn.addEventListener('mouseenter', () => {
+            showPleadingMessage();
             moveButton();
         });
 
         // Also move on touch for mobile
         noBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
+            showPleadingMessage();
             moveButton();
         });
+
+        function showPleadingMessage() {
+            pleadingText.textContent = shuffledMessages[pleadingCount];
+            pleadingText.style.animation = 'none';
+            setTimeout(() => {
+                pleadingText.style.animation = 'shake 0.5s ease-in-out';
+            }, 10);
+            
+            pleadingCount++;
+            
+            // If we've exhausted all messages, shuffle and restart
+            if (pleadingCount >= shuffledMessages.length) {
+                shuffledMessages = shuffleArray([...pleadingMessages]);
+                pleadingCount = 0;
+            }
+        }
 
         function moveButton() {
             const containerRect = buttonContainer.getBoundingClientRect();
